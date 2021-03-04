@@ -9,6 +9,7 @@ class XOGame:
         self.player1 = player1
         self.player2 = player2
         self.winner = None
+        self.winner_keys = []
         self.whose_turn = True  # True: Player1, False: Player2
         self.board = [
             [0, 0, 0],
@@ -117,17 +118,30 @@ class XOGame:
         return True
 
     def check_winner(self) -> bool:
-        if self.board[0][0] == self.board[0][1] == self.board[0][2] != 0 \
-                or self.board[0][0] == self.board[1][0] == self.board[2][0] != 0 \
-                or self.board[0][0] == self.board[1][1] == self.board[2][2] != 0:
+        if self.board[0][0] == self.board[0][1] == self.board[0][2] != 0:
             self.winner = self.player1 if self.board[0][0] == 1 else self.player2
-        elif self.board[1][0] == self.board[1][1] == self.board[1][2] != 0 \
-                or self.board[0][1] == self.board[1][1] == self.board[2][1] != 0 \
-                or self.board[0][2] == self.board[1][1] == self.board[2][0] != 0:
+            self.winner_keys.extend([(0, 0), (0, 1), (0, 2)])
+        elif self.board[0][0] == self.board[1][0] == self.board[2][0] != 0:
+            self.winner = self.player1 if self.board[0][0] == 1 else self.player2
+            self.winner_keys.extend([(0, 0), (1, 0), (2, 0)])
+        elif self.board[0][0] == self.board[1][1] == self.board[2][2] != 0:
+            self.winner = self.player1 if self.board[0][0] == 1 else self.player2
+            self.winner_keys.extend([(0, 0), (1, 1), (2, 2)])
+        elif self.board[1][0] == self.board[1][1] == self.board[1][2] != 0:
             self.winner = self.player1 if self.board[1][1] == 1 else self.player2
-        elif self.board[2][0] == self.board[2][1] == self.board[2][2] != 0 \
-                or self.board[0][2] == self.board[1][2] == self.board[2][2] != 0:
+            self.winner_keys.extend([(1, 0), (1, 1), (1, 2)])
+        elif self.board[0][1] == self.board[1][1] == self.board[2][1] != 0:
+            self.winner = self.player1 if self.board[1][1] == 1 else self.player2
+            self.winner_keys.extend([(0, 1), (1, 1), (2, 1)])
+        elif self.board[0][2] == self.board[1][1] == self.board[2][0] != 0:
+            self.winner = self.player1 if self.board[1][1] == 1 else self.player2
+            self.winner_keys.extend([(0, 2), (1, 1), (2, 0)])
+        elif self.board[2][0] == self.board[2][1] == self.board[2][2] != 0:
             self.winner = self.player1 if self.board[2][2] == 1 else self.player2
+            self.winner_keys.extend([(2, 0), (2, 1), (2, 2)])
+        elif self.board[0][2] == self.board[1][2] == self.board[2][2] != 0:
+            self.winner = self.player1 if self.board[2][2] == 1 else self.player2
+            self.winner_keys.extend([(0, 2), (1, 2), (2, 2)])
 
         if self.winner:
             new_board_keys = []
@@ -151,7 +165,8 @@ class XOGame:
                     elif self.board[i][j] == 1:
                         temp.append(
                             InlineKeyboardButton(
-                                emojis.X if self.player1["id"] == self.winner["id"] else emojis.X_loser,
+                                emojis.X if self.player1["id"] == self.winner["id"] and (i, j) in self.winner_keys
+                                else emojis.X_loser,
                                 json.dumps({
                                     "type": "K",
                                     "coord": (i, j),
@@ -162,7 +177,8 @@ class XOGame:
                     else:
                         temp.append(
                             InlineKeyboardButton(
-                                emojis.O if self.player2["id"] == self.winner["id"] else emojis.O_loser,
+                                emojis.O if self.player2["id"] == self.winner["id"] and (i, j) in self.winner_keys
+                                else emojis.O_loser,
                                 json.dumps({
                                     "type": "K",
                                     "coord": (i, j),
