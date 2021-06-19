@@ -1,1 +1,1 @@
-worker: python .\XOGameBot\main.py
+worker: python XOGameBot/main.py
