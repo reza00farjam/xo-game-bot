@@ -1,3 +1,2 @@
 pyrogram>=1.2.9
-json>=2.0.9
 TgCrypto>=1.2.2
