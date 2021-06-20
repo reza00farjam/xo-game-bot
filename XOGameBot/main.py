@@ -1,10 +1,16 @@
+import os
+
 from data import *
 from pyrogram import Client, filters
 from pyrogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, \
     InlineKeyboardMarkup, CallbackQuery, Message
 
 
-app = Client("XOGame")
+app = Client(session_name="XOGame",
+             api_id=os.environ.get("API_ID"),
+             api_hash=os.environ.get("API_HASH"),
+             bot_token=os.environ.get("BOT_TOKEN")
+             )
 
 
 def mention(name: str, id: int) -> str:
